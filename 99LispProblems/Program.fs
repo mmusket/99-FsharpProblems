@@ -133,4 +133,89 @@ let rec numEnc l =
 let res10 = items |> numEnc
 
 
+// Modified run-length encoding.
+//Modify the result of problem P10 in such a way that if an element has no duplicates it is simply copied into the result list. Only elements with duplicates are transferred as (N E) lists.
+//
+//Example:
+//* (encode-modified '(a a a a b c c a a d e e e e))
+//((4 A) B (2 C) (2 A) D (4 E))
+//P12 (**) Decode a run-length encoded list
+
+
+type numEncodeItem<'T> = 
+            | C of int * 'T
+            | V of 'T 
+let numenc2 (c,i) = if c <> 1 then C (c,i) else V i
+
+let numEnc2 l = List.map numenc2 l
+
+let res11 = res10 |> numEnc2
+
+
+
+//Decode a run-length encoded list.
+//Given a run-length code list generated as specified in problem P11. Construct its uncompressed version.
+
+let createRep it = match it with 
+                        | V a -> [a]
+                        | C (b,c) -> [for i in 1..b -> c]
+let deCompress l = List.collect createRep l
+
+let res12 = res11 |> deCompress
+
+
+
+//P13 (**) Run-length encoding of a list (direct solution).
+//Implement the so-called run-length encoding data compression method directly. I.e. don't explicitly create the sublists containing the duplicates, as in problem P09, but only count them. As in problem P11, simplify the result list by replacing the singleton lists (1 X) by X.
+//
+//Example:
+//* (encode-direct '(a a a a b c c a a d e e e e))
+//((4 A) B (2 C) (2 A) D (4 E))
+
+//
+// Duplicate the elements of a list.
+//Example:
+//* (dupli '(a b c c d))
+//(A A B B C C C C D D)
+
+let duplicate l = List.collect (fun a-> [a; a]) l 
+let res14 = items |> duplicate
+
+//Replicate the elements of a list a given number of times.
+//Example:
+//* (repli '(a b c) 3)
+//(A A A B B B C C C)
+
+
+let dubrep c l = List.collect (fun a-> [for i in 1..c -> a]) l
+let res15 = items |> dubrep 3
+
+
+
+//Drop every N'th element from a list.
+//Example:
+//* (drop '(a b c d e f g h i k) 3)
+//(A B D E G H K)
+
+let createfilterNth() = 
+                    let pos = ref 3     
+                    let curr = ref 0          
+                    (fun (newPos) -> pos := newPos),
+                    (fun () -> curr := 0),
+                    (fun _ ->
+                                curr := (curr.Value + 1)
+                                if !curr = !pos then 
+                                                     curr := 0 
+                                                     false else true)
+
+let ChangeValue, Init , FilterNth = createfilterNth()
+//combine changevalue and init 
+
+let alpha = [1..10] 
+
+let res16 = 
+            let _ = Init()
+            let _ = ChangeValue (4)
+            alpha |> List.filter FilterNth
+
 
