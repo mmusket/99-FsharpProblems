@@ -227,10 +227,9 @@ let res16 =
 
 
 
-let rec splitAtPos pos current l = 
-                                     let a, b =  if pos = current then ([] , List.tail l)    
-                                                     else  splitAtPos pos (current + 1) (List.tail l)
-                                     List.head l :: a , b
+let rec splitAtPos pos current l = let a, b =  if pos = current then ([] , List.tail l)    
+                                                 else  splitAtPos pos (current + 1) (List.tail l)
+                                   List.head l :: a , b
 let SplitListAt list at = splitAtPos at 1 list
                                   
 let res17 = SplitListAt items 7
@@ -245,8 +244,7 @@ let res17 = SplitListAt items 7
 //(C D E F G)
 
 
-let doubleSplit start endd list = 
-                                    let a ,b = SplitListAt list (start - 1)
+let doubleSplit start endd list =   let a ,b = SplitListAt list (start - 1)
                                     let c ,d = SplitListAt b (endd - start + 1)
                                     c
 let res18 = doubleSplit 2 9 items
@@ -277,7 +275,6 @@ let res19b = rotate -3 items
 let removek k list = let a, b = SplitListAt list k
                      let headminusone = a |> List.rev |> List.tail |> List.rev 
                      headminusone @ b 
-
 
 let res20 = removek 10 items
 
